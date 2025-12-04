@@ -17,7 +17,7 @@ CREATE TABLE label (
 CREATE TABLE task (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
+    description VARCHAR,
 
     status VARCHAR(50) NOT NULL DEFAULT 'TODO',
     priority VARCHAR(20) NOT NULL DEFAULT 'LOW',
