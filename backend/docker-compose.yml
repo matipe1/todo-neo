@@ -1,4 +1,18 @@
 services:
+  # todo-neo:
+  #   build:
+  #     context: .
+  #     dockerfile: ./todoneo/src/main/docker/Dockerfile
+  #   container_name: todo-neo
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/todoneo_db
+  #     SPRING_DATASOURCE_USERNAME: postgres
+  #     SPRING_DATASOURCE_PASSWORD: admin
+  #   depends_on:
+  #     - db
+
   db:
     image: postgres:15-alpine
     container_name: db
