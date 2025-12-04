@@ -23,8 +23,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       TZ: America/Argentina/Buenos_Aires
+      # Local settings to reduce warnings
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      POSTGRES_INITDB_ARGS: "--locale=C.UTF-8"
     volumes:
-      - ./db/init:/docker-entrypoint-initdb.d
+      - ./database/init:/docker-entrypoint-initdb.d
       - todoneo-pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d todoneo_db"]
