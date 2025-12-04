@@ -27,6 +27,7 @@ CREATE TABLE task (
 
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMPTZ DEFAULT NULL,
 
     workspace_id INT,
     CONSTRAINT fk_workspace FOREIGN KEY (workspace_id) REFERENCES workspace(id)
