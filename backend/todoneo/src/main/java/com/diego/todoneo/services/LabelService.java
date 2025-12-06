@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.diego.todoneo.dtos.LabelCreateDTO;
 import com.diego.todoneo.dtos.LabelDTO;
 import com.diego.todoneo.models.Label;
 import com.diego.todoneo.repositories.LabelRepository;
@@ -34,7 +35,7 @@ public class LabelService {
     }
 
     @Transactional
-    public LabelDTO createLabel(LabelDTO labelDTO) {
+    public LabelDTO createLabel(LabelCreateDTO labelDTO) {
         this.validateNameUnique(labelDTO.getName(), null);
 
         Label label = labelMapper.toEntity(labelDTO);

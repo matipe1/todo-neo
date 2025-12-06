@@ -3,6 +3,7 @@ package com.diego.todoneo.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.diego.todoneo.dtos.LabelCreateDTO;
 import com.diego.todoneo.dtos.LabelDTO;
 import com.diego.todoneo.services.LabelService;
 
@@ -38,8 +39,8 @@ public class LabelController {
     }
 
     @PostMapping
-    public ResponseEntity<LabelDTO> createLabel(@Valid @RequestBody LabelDTO labelDTO) {
-        LabelDTO createdLabel = labelService.createLabel(labelDTO);
+    public ResponseEntity<LabelDTO> createLabel(@Valid @RequestBody LabelCreateDTO labelCreateDTO) {
+        LabelDTO createdLabel = labelService.createLabel(labelCreateDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLabel);
     }
 
