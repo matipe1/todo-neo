@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 
 import com.diego.todoneo.repositories.TaskRepository;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
 }
