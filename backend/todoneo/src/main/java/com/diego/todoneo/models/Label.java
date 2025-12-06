@@ -16,6 +16,6 @@ public class Label {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 50, unique = true)
     private String name;
 }

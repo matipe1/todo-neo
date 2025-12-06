@@ -35,6 +35,8 @@ public class LabelService {
 
     @Transactional
     public LabelDTO createLabel(LabelDTO labelDTO) {
+        this.validateNameUnique(labelDTO.getName(), null);
+
         Label label = labelMapper.toEntity(labelDTO);
         Label savedLabel = labelRepository.save(label);
         return labelMapper.toDTO(savedLabel);
@@ -42,8 +44,11 @@ public class LabelService {
 
     @Transactional
     public LabelDTO updateLabel(Integer id, LabelDTO labelDTO) {
+        this.validateNameUnique(labelDTO.getName(), id); // Ignore the specific id name check
+
         Label existingLabel = labelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Label not found with id: " + id));
+
         existingLabel.setName(labelDTO.getName());
         Label updatedLabel = labelRepository.save(existingLabel);
         return labelMapper.toDTO(updatedLabel);
@@ -55,5 +60,18 @@ public class LabelService {
             throw new RuntimeException("Label not found with id: " + id);
         }
         labelRepository.deleteById(id);
+    }
+
+    private void validateNameUnique(String name, Integer idToExclude) {
+        boolean exists;
+        
+        if (idToExclude == null) {
+            exists = labelRepository.existsByName(name);
+        } else {
+            exists = labelRepository.existsByNameAndIdNot(name, idToExclude);
+        }
+        if (exists) {
+            throw new RuntimeException("Label name '" + name + "' already exists");
+        }
     }
 }

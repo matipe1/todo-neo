@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.diego.todoneo.models.Label;
 
 public interface LabelRepository extends JpaRepository<Label, Integer> {
-    
+    public boolean existsByName(String name);
+    public boolean existsByNameAndIdNot(String name, Integer id);
 }

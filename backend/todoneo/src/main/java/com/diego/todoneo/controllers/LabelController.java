@@ -40,7 +40,7 @@ public class LabelController {
     @PostMapping
     public ResponseEntity<LabelDTO> createLabel(@Valid @RequestBody LabelDTO labelDTO) {
         LabelDTO createdLabel = labelService.createLabel(labelDTO);
-        return new ResponseEntity<>(createdLabel, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdLabel);
     }
 
     @PutMapping("/{id}")
