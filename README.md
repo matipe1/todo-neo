@@ -1,5 +1,5 @@
 # 1. todo-neo Introduction
-A full-stack todo application featuring advanced implementations such as software design principles, design patterns, OAuth authentication, and integrations with external APIs.
+A full-stack todo application featuring advanced implementations such as software design principles, design patterns, OAuth authentication, and integrations with external APIs. It also uses Docker containerization to simplify the build process and let me focus on writing the code.
 
 The name comes from the *neocortex*, the part of the brain responsible for planning, organizing, and managing tasks. It plays a key role in helping us reduce stress by bringing clarity and structure to our daily actions.
 
