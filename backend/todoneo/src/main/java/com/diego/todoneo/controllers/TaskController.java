@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.diego.todoneo.dtos.TaskCreateDTO;
 import com.diego.todoneo.dtos.TaskDTO;
+import com.diego.todoneo.dtos.TaskUpdateDTO;
 import com.diego.todoneo.services.TaskService;
 
 import jakarta.validation.Valid;
@@ -36,5 +39,11 @@ public class TaskController {
     public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskCreateDTO taskDTO) {
         TaskDTO createdTask = taskService.createTask(taskDTO);
         return ResponseEntity.ok().body(createdTask);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Integer id, @Valid @RequestBody TaskUpdateDTO updateDTO) {
+        TaskDTO updatedTask = taskService.updateTask(id, updateDTO);
+        return ResponseEntity.ok().body(updatedTask);
     }
 }

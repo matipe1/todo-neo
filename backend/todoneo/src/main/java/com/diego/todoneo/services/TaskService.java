@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.diego.todoneo.dtos.TaskCreateDTO;
 import com.diego.todoneo.dtos.TaskDTO;
+import com.diego.todoneo.dtos.TaskUpdateDTO;
 import com.diego.todoneo.models.Label;
 import com.diego.todoneo.models.Task;
 import com.diego.todoneo.models.Workspace;
+import com.diego.todoneo.models.enums.TaskPriority;
 import com.diego.todoneo.repositories.TaskRepository;
 import com.diego.todoneo.utils.exceptions.ResourceNotFoundException;
 import com.diego.todoneo.utils.mapper.TaskMapper;
@@ -58,10 +60,6 @@ public class TaskService {
             labels = taskDTO.getLabelIds().stream()
                 .map(labelId -> labelService.getLabelEntityById(labelId))
                 .collect(Collectors.toSet());
-            
-            if (labels.size() != taskDTO.getLabelIds().size()) {
-                throw new ResourceNotFoundException("One or more labels not found for the provided IDs");
-            }
         }
 
         Task task = taskMapper.toEntity(taskDTO, workspace, labels);
@@ -69,4 +67,41 @@ public class TaskService {
         return taskMapper.toDTO(savedTask);
     }
 
+    @Transactional
+    public TaskDTO updateTask(Integer id, TaskUpdateDTO updateDTO) {
+        Task task = this.getTaskEntityById(id);
+
+        if (updateDTO.getTitle() != null) {
+            task.setTitle(updateDTO.getTitle());
+        }
+        if (updateDTO.getDescription() != null) {
+            task.setDescription(updateDTO.getDescription());
+        }
+        if (updateDTO.getPriority() != null && updateDTO.getPriority().matches(TaskPriority.REGEX)) {
+            task.setPriority(TaskPriority.valueOf(updateDTO.getPriority()));
+        }
+        if (updateDTO.getDueDate() != null) {
+            task.setDueDate(updateDTO.getDueDate());
+        }
+        if (updateDTO.getReminderDate() != null) {
+            task.setReminderDate(updateDTO.getReminderDate());
+        }
+
+        if (updateDTO.getWorkspaceId() != null) {
+            Workspace workspace = workspaceService.getWorkspaceEntityById(updateDTO.getWorkspaceId());
+            task.setWorkspace(workspace);
+        }
+
+        if (updateDTO.getLabelIds() != null) {
+            Set<Label> labels = new HashSet<>();
+            labels.stream()
+                .filter(label -> updateDTO.getLabelIds().contains(label.getId()))
+                .forEach(labels::add);
+                
+            task.setLabels(labels);
+        }
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
 }
