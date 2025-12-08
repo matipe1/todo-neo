@@ -29,6 +29,9 @@ public class Task {
     @Column(name = "title", nullable = false, length = 255)
     private String title;
 
+    @Column(name = "description", nullable = true, length = 1000)
+    private String description;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 50)
     @Builder.Default
