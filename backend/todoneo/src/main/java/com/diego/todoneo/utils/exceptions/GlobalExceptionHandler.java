@@ -55,7 +55,8 @@ public class GlobalExceptionHandler {
         response.put("timestamp", LocalDateTime.now());
         response.put("message", "An unexpected error occurred");
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-
+        ex.printStackTrace();
+        
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
