@@ -30,7 +30,7 @@ public class LabelService {
     }
 
     @Transactional(readOnly = true)
-    private Label getLabelEntityById(Integer id) {
+    public Label getLabelEntityById(Integer id) {
         return labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Label not found with id: " + id));
     }

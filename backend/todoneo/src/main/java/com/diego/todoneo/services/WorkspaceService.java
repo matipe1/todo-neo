@@ -30,7 +30,7 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
-    private Workspace getWorkspaceEntityById(Integer id) {
+    public Workspace getWorkspaceEntityById(Integer id) {
         return workspaceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Workspace not found with id: " + id));
     }
