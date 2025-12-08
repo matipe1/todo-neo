@@ -10,6 +10,8 @@ import com.diego.todoneo.dtos.WorkspaceCreateDTO;
 import com.diego.todoneo.dtos.WorkspaceDTO;
 import com.diego.todoneo.models.Workspace;
 import com.diego.todoneo.repositories.WorkspaceRepository;
+import com.diego.todoneo.utils.exceptions.DuplicateEntityException;
+import com.diego.todoneo.utils.exceptions.ResourceNotFoundException;
 import com.diego.todoneo.utils.mapper.WorkspaceMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -28,9 +30,14 @@ public class WorkspaceService {
     }
 
     @Transactional(readOnly = true)
+    private Workspace getWorkspaceEntityById(Integer id) {
+        return workspaceRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Workspace not found with id: " + id));
+    }
+
+    @Transactional(readOnly = true)
     public WorkspaceDTO getWorkspaceById(Integer id) {
-        Workspace workspace = workspaceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Workspace not found with id: " + id));
+        Workspace workspace = this.getWorkspaceEntityById(id);
         return workspaceMapper.toDTO(workspace);
     }
 
@@ -47,8 +54,7 @@ public class WorkspaceService {
     public WorkspaceDTO updateWorkspace(Integer id, WorkspaceDTO workspaceDTO) {
         this.validateNameUnique(workspaceDTO.getName(), id); // Ignore the specific id name check
 
-        Workspace existingWorkspace = workspaceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Workspace not found with id: " + id));
+        Workspace existingWorkspace = this.getWorkspaceEntityById(id);
 
         existingWorkspace.setName(workspaceDTO.getName());
         Workspace updatedWorkspace = workspaceRepository.save(existingWorkspace);
@@ -58,7 +64,7 @@ public class WorkspaceService {
     @Transactional
     public void deleteWorkspace(Integer id) {
         if (!workspaceRepository.existsById(id)) {
-            throw new RuntimeException("Workspace not found with id: " + id);
+            throw new ResourceNotFoundException("Workspace not found with id: " + id);
         }
         workspaceRepository.deleteById(id);
     }
@@ -72,7 +78,7 @@ public class WorkspaceService {
             exists = workspaceRepository.existsByNameAndIdNot(name, idToExclude);
         }
         if (exists) {
-            throw new RuntimeException("Workspace name '" + name + "' already exists");
+            throw new DuplicateEntityException("Workspace name '" + name + "' already exists");
         }
     }
 }

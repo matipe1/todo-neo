@@ -10,6 +10,8 @@ import com.diego.todoneo.dtos.LabelCreateDTO;
 import com.diego.todoneo.dtos.LabelDTO;
 import com.diego.todoneo.models.Label;
 import com.diego.todoneo.repositories.LabelRepository;
+import com.diego.todoneo.utils.exceptions.DuplicateEntityException;
+import com.diego.todoneo.utils.exceptions.ResourceNotFoundException;
 import com.diego.todoneo.utils.mapper.LabelMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -28,9 +30,14 @@ public class LabelService {
     }
 
     @Transactional(readOnly = true)
+    private Label getLabelEntityById(Integer id) {
+        return labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Label not found with id: " + id));
+    }
+
+    @Transactional(readOnly = true)
     public LabelDTO getLabelById(Integer id) {
-        Label label = labelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Label not found with id: " + id));
+        Label label = this.getLabelEntityById(id);
         return labelMapper.toDTO(label);
     }
 
@@ -47,8 +54,7 @@ public class LabelService {
     public LabelDTO updateLabel(Integer id, LabelDTO labelDTO) {
         this.validateNameUnique(labelDTO.getName(), id); // Ignore the specific id name check
 
-        Label existingLabel = labelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Label not found with id: " + id));
+        Label existingLabel = this.getLabelEntityById(id);
 
         existingLabel.setName(labelDTO.getName());
         Label updatedLabel = labelRepository.save(existingLabel);
@@ -58,7 +64,7 @@ public class LabelService {
     @Transactional
     public void deleteLabel(Integer id) {
         if (!labelRepository.existsById(id)) {
-            throw new RuntimeException("Label not found with id: " + id);
+            throw new ResourceNotFoundException("Label not found with id: " + id);
         }
         labelRepository.deleteById(id);
     }
@@ -72,7 +78,7 @@ public class LabelService {
             exists = labelRepository.existsByNameAndIdNot(name, idToExclude);
         }
         if (exists) {
-            throw new RuntimeException("Label name '" + name + "' already exists");
+            throw new DuplicateEntityException("Label name '" + name + "' already exists");
         }
     }
 }
