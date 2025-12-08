@@ -94,9 +94,10 @@ public class TaskService {
 
         if (updateDTO.getLabelIds() != null) {
             Set<Label> labels = new HashSet<>();
-            labels.stream()
-                .filter(label -> updateDTO.getLabelIds().contains(label.getId()))
-                .forEach(labels::add);
+            for (Integer labelId : updateDTO.getLabelIds()) {
+                Label label = labelService.getLabelEntityById(labelId);
+                labels.add(label);
+            }
                 
             task.setLabels(labels);
         }
