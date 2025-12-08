@@ -1,9 +1,21 @@
 package com.diego.todoneo.services;
 
-import org.springframework.stereotype.Service;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import com.diego.todoneo.patterns.state.TaskStateFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.diego.todoneo.dtos.TaskCreateDTO;
+import com.diego.todoneo.dtos.TaskDTO;
+import com.diego.todoneo.models.Label;
+import com.diego.todoneo.models.Task;
+import com.diego.todoneo.models.Workspace;
 import com.diego.todoneo.repositories.TaskRepository;
+import com.diego.todoneo.utils.exceptions.ResourceNotFoundException;
+import com.diego.todoneo.utils.mapper.TaskMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,5 +23,50 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
-    private final TaskStateFactory taskStateFactory;
+    private final TaskMapper taskMapper;
+    private final WorkspaceService workspaceService;
+    private final LabelService labelService;
+
+    @Transactional(readOnly = true)
+    public List<TaskDTO> getAllTasks() {
+        List<Task> tasks = taskRepository.findAllWithDetails();
+        return tasks.stream()
+                .map(taskMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Task getTaskEntityById(Integer id) {
+        return taskRepository.findByIdWithDetails(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public TaskDTO getTaskById(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        return taskMapper.toDTO(task);
+    }
+
+    @Transactional
+    public TaskDTO createTask(TaskCreateDTO taskDTO) {
+        Workspace workspace = null;
+        if (taskDTO.getWorkspaceId() != null) {
+            workspace = workspaceService.getWorkspaceEntityById(taskDTO.getWorkspaceId());
+        }
+        Set<Label> labels = new HashSet<>();
+        if (taskDTO.getLabelIds() != null) {
+            labels = taskDTO.getLabelIds().stream()
+                .map(labelId -> labelService.getLabelEntityById(labelId))
+                .collect(Collectors.toSet());
+            
+            if (labels.size() != taskDTO.getLabelIds().size()) {
+                throw new ResourceNotFoundException("One or more labels not found for the provided IDs");
+            }
+        }
+
+        Task task = taskMapper.toEntity(taskDTO, workspace, labels);
+        Task savedTask = taskRepository.save(task);
+        return taskMapper.toDTO(savedTask);
+    }
+
 }

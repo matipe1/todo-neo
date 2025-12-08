@@ -1,5 +1,9 @@
 package com.diego.todoneo.utils.mapper;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.diego.todoneo.dtos.LabelCreateDTO;
@@ -15,6 +19,13 @@ public class LabelMapper {
                 .id(label.getId())
                 .name(label.getName())
                 .build();
+    }
+
+    public Set<LabelDTO> toDTOSet(Set<Label> labels) {
+        if (labels == null) return new HashSet<>();
+        return labels.stream()
+            .map(this::toDTO)
+            .collect(Collectors.toSet());
     }
 
     public Label toEntity(LabelDTO labelDTO) {
