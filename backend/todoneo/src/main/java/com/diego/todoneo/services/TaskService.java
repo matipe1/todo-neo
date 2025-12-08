@@ -105,4 +105,10 @@ public class TaskService {
         Task updatedTask = taskRepository.save(task);
         return taskMapper.toDTO(updatedTask);
     }
+
+    @Transactional
+    public void deleteTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        taskRepository.delete(task);
+    }
 }
