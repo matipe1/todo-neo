@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.diego.todoneo.models.enums.TaskPriority;
 import com.diego.todoneo.models.enums.TaskStatus;
+import com.diego.todoneo.patterns.state.TaskState;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -71,4 +72,32 @@ public class Task {
     )
     @Builder.Default
     private Set<Label> labels = new HashSet<>();
+
+    public void start(TaskState state) {
+        state.start(this);
+    }
+
+    public void finish(TaskState state, Instant completionTime) {
+        state.finish(this, completionTime);
+    }
+
+    public void cancel(TaskState state) {
+        state.cancel(this);
+    }
+
+    public void archive(TaskState state) {
+        state.archive(this);
+    }
+
+    public void back(TaskState state) {
+        state.back(this);
+    }
+
+    public void reopen(TaskState state) {
+        state.reopen(this);
+    }
+
+    public void unarchive(TaskState state) {
+        state.unarchive(this);
+    }
 }

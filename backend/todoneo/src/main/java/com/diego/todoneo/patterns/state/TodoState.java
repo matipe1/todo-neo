@@ -1,28 +1,34 @@
 package com.diego.todoneo.patterns.state;
 
+import java.time.Instant;
+
 import org.springframework.stereotype.Component;
+
+import com.diego.todoneo.models.Task;
+import com.diego.todoneo.models.enums.TaskStatus;
 
 @Component
 public class TodoState implements TaskState {
 
     @Override
-    public void start() {
-        throw new UnsupportedOperationException("Unable to 'start' a task from this state.");
+    public void start(Task task) {
+        task.setStatus(TaskStatus.IN_PROGRESS);
     }
 
     @Override
-    public void finish() {
-        throw new UnsupportedOperationException("Unable to 'finish' a task from this state.");
+    public void finish(Task task, Instant completionTime) {
+        task.setStatus(TaskStatus.DONE);
+        task.setCompletedAt(completionTime);
     }
 
     @Override
-    public void cancel() {
-        throw new UnsupportedOperationException("Unable to 'cancel' a task from this state.");
+    public void cancel(Task task) {
+        task.setStatus(TaskStatus.CANCELED);
     }
 
     @Override
-    public void archive() {
-        throw new UnsupportedOperationException("Unable to 'archive' a task from this state.");
+    public void archive(Task task) {
+        task.setStatus(TaskStatus.BACKLOG);
     }
 
     @Override
@@ -31,17 +37,17 @@ public class TodoState implements TaskState {
     }
 
     @Override
-    public void back() {
+    public void back(Task task) {
         throw new UnsupportedOperationException("Unable to 'back' from this state.");
     }
 
     @Override
-    public void reopen() {
+    public void reopen(Task task) {
         throw new UnsupportedOperationException("Unable to 'reopen' a task from this state.");
     }
 
     @Override
-    public void unarchive() {
+    public void unarchive(Task task) {
         throw new UnsupportedOperationException("Unable to 'unarchive' a task from this state.");
     }
     

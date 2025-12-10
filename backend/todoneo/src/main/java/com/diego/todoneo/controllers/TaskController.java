@@ -53,4 +53,40 @@ public class TaskController {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/start")
+    public ResponseEntity<TaskDTO> startTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.startTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
+
+    @PatchMapping("/{id}/finish")
+    public ResponseEntity<TaskDTO> finishTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.finishTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<TaskDTO> cancelTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.cancelTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
+
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<TaskDTO> archiveTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.archiveTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
+
+    @PatchMapping("/{id}/back")
+    public ResponseEntity<TaskDTO> backTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.backTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
+
+    @PatchMapping("/{id}/reopen")
+    public ResponseEntity<TaskDTO> reopenTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.reopenTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
 }

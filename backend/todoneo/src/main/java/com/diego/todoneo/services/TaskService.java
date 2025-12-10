@@ -1,5 +1,6 @@
 package com.diego.todoneo.services;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import com.diego.todoneo.models.Label;
 import com.diego.todoneo.models.Task;
 import com.diego.todoneo.models.Workspace;
 import com.diego.todoneo.models.enums.TaskPriority;
+import com.diego.todoneo.patterns.state.TaskStateFactory;
 import com.diego.todoneo.repositories.TaskRepository;
 import com.diego.todoneo.utils.exceptions.ResourceNotFoundException;
 import com.diego.todoneo.utils.mapper.TaskMapper;
@@ -24,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+
+    private final TaskStateFactory taskStateFactory;
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final WorkspaceService workspaceService;
@@ -110,5 +114,68 @@ public class TaskService {
     public void deleteTask(Integer id) {
         Task task = this.getTaskEntityById(id);
         taskRepository.delete(task);
+    }
+
+    @Transactional
+    public TaskDTO startTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.start(taskStateFactory.getState(task.getStatus()));
+        
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    @Transactional
+    public TaskDTO finishTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.finish(taskStateFactory.getState(task.getStatus()), Instant.now());
+        
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    @Transactional
+    public TaskDTO cancelTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.cancel(taskStateFactory.getState(task.getStatus()));
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    @Transactional
+    public TaskDTO archiveTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.archive(taskStateFactory.getState(task.getStatus()));
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+    
+    @Transactional
+    public TaskDTO backTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.back(taskStateFactory.getState(task.getStatus()));
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    @Transactional
+    public TaskDTO reopenTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.reopen(taskStateFactory.getState(task.getStatus()));
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
+    }
+
+    @Transactional
+    public TaskDTO unarchiveTask(Integer id) {
+        Task task = this.getTaskEntityById(id);
+        task.unarchive(taskStateFactory.getState(task.getStatus()));
+
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toDTO(updatedTask);
     }
 }
