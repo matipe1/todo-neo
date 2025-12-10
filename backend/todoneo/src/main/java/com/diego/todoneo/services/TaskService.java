@@ -178,4 +178,13 @@ public class TaskService {
         Task updatedTask = taskRepository.save(task);
         return taskMapper.toDTO(updatedTask);
     }
+
+    @Transactional
+    public void markTasksAsOverdue(List<Task> tasks) {
+        tasks.stream()
+            .forEach(task -> {
+                task.markAsOverdue(taskStateFactory.getState(task.getStatus()));
+                    taskRepository.save(task);
+            });
+    }
 }

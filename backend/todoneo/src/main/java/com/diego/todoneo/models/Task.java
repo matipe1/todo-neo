@@ -100,4 +100,8 @@ public class Task {
     public void unarchive(TaskState state) {
         state.unarchive(this);
     }
+
+    public void markAsOverdue(TaskState state) {
+        state.checkDeadline(this);
+    }
 }

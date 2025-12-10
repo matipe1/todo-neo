@@ -31,7 +31,7 @@ public class DoneState implements TaskState {
     }
 
     @Override
-    public void checkDeadline() {
+    public void checkDeadline(Task task) {
         throw new UnsupportedOperationException("Unable to 'checkDeadline' of a task from this state.");
     }
 

@@ -32,8 +32,8 @@ public class TodoState implements TaskState {
     }
 
     @Override
-    public void checkDeadline() {
-        throw new UnsupportedOperationException("Unable to 'checkDeadline' of a task from this state.");
+    public void checkDeadline(Task task) {
+        task.setStatus(TaskStatus.OVERDUE);
     }
 
     @Override
