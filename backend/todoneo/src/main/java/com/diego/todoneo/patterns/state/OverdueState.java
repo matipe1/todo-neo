@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.stereotype.Component;
 
 import com.diego.todoneo.models.Task;
+import com.diego.todoneo.models.enums.TaskStatus;
 
 @Component
 public class OverdueState implements TaskState {
@@ -16,7 +17,8 @@ public class OverdueState implements TaskState {
 
     @Override
     public void finish(Task task, Instant completionTime) {
-        throw new IllegalStateException("Unable to 'finish' a task from this state.");
+        task.setStatus(TaskStatus.DONE);
+        task.setCompletedAt(completionTime);
     }
 
     @Override
