@@ -38,17 +38,17 @@ public class TodoState implements TaskState {
 
     @Override
     public void back(Task task) {
-        throw new UnsupportedOperationException("Unable to 'back' from this state.");
+        throw new IllegalStateException("Unable to 'back' from this state.");
     }
 
     @Override
     public void reopen(Task task) {
-        throw new UnsupportedOperationException("Unable to 'reopen' a task from this state.");
+        throw new IllegalStateException("Unable to 'reopen' a task from this state.");
     }
 
     @Override
     public void unarchive(Task task) {
-        throw new UnsupportedOperationException("Unable to 'unarchive' a task from this state.");
+        throw new IllegalStateException("Unable to 'unarchive' a task from this state.");
     }
     
 }

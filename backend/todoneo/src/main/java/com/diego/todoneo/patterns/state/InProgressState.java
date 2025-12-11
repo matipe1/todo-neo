@@ -12,7 +12,7 @@ public class InProgressState implements TaskState {
 
     @Override
     public void start(Task task) {
-        throw new UnsupportedOperationException("Unable to 'start' a task from this state.");
+        throw new IllegalStateException("Unable to 'start' a task from this state.");
     }
 
     @Override
@@ -28,7 +28,7 @@ public class InProgressState implements TaskState {
 
     @Override
     public void archive(Task task) {
-        throw new UnsupportedOperationException("Unable to 'archive' a task from this state.");
+        throw new IllegalStateException("Unable to 'archive' a task from this state.");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class InProgressState implements TaskState {
 
     @Override
     public void reopen(Task task) {
-        throw new UnsupportedOperationException("Unable to 'reopen' a task from this state.");
+        throw new IllegalStateException("Unable to 'reopen' a task from this state.");
     }
 
     @Override
