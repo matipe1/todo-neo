@@ -19,5 +19,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT t FROM Task t LEFT JOIN FETCH t.workspace LEFT JOIN FETCH t.labels")
     List<Task> findAllWithDetails();
 
+    @Query("SELECT t FROM Task t WHERE t.status IN :statuses AND t.dueDate IS NOT NULL AND t.dueDate < :now")
     List<Task> findByStatusAndDueDateBefore(List<TaskStatus> statuses, Instant now);
 }
