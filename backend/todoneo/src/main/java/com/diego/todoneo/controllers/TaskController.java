@@ -89,4 +89,10 @@ public class TaskController {
         TaskDTO updatedTask = taskService.reopenTask(id);
         return ResponseEntity.ok().body(updatedTask);
     }
+
+    @PatchMapping("/{id}/unarchive")
+    public ResponseEntity<TaskDTO> unarchiveTask(@PathVariable Integer id) {
+        TaskDTO updatedTask = taskService.unarchiveTask(id);
+        return ResponseEntity.ok().body(updatedTask);
+    }
 }
